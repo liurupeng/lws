@@ -32,6 +32,7 @@ const (
 	TpuResourceName                 corev1.ResourceName = corev1.ResourceName("google.com/tpu")
 	TpuWorkerHostNames              string              = "TPU_WORKER_HOSTNAMES"
 	TpuWorkerId                     string              = "TPU_WORKER_ID"
+	TpuName                         string              = "TPU_NAME"
 	LeaderRequestsTPUsAnnotationKey string              = "leaderworkerset.sigs.k8s.io/leader-requests-tpus"
 )
 
@@ -210,6 +211,11 @@ func AddTPUVariables(pod *corev1.Pod, size int) error {
 		corev1.EnvVar{
 			Name:  TpuWorkerId,
 			Value: fmt.Sprint(tpuWorkerId),
+		},
+		// set the TPU name as the leader name, since it's the identifier for the group
+		corev1.EnvVar{
+			Name:  TpuName,
+			Value: fmt.Sprintf(leaderName),
 		},
 	)
 	return nil
